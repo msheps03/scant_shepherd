@@ -12,9 +12,9 @@ from pathlib import Path
 class ScannerController:
 
     def __init__(self):
-        self.stepperX_ID = "00281480"
-        self.stepperY_ID = "00281470"
-        self.stepperZ_ID = "00282144"
+        self.stepperX_ID = "00346067"
+        self.stepperY_ID = "00346106"
+        self.stepperZ_ID = "00346074"
 
         self.stepper_names = ["X", "Y", "Z"]
         self.stepper_IDs = [self.stepperX_ID, self.stepperY_ID, self.stepperZ_ID]
