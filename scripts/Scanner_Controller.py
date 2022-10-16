@@ -23,16 +23,16 @@ class ScannerController:
         self.stepper_maxAccel = [10000, 20000, 100000]
         self.stepper_maxVelocity = [800000, 1000000, 60000000]
         self.stepper_stepModes = [8, 8, 8]
-        self.stepper_currents = [174, 174, 343]
+        self.stepper_currents = [1611, 174, 343]
 
         self.stepper_maxPos = [450, 1600, 0]
-        self.stepper_minPos = [0, -1600, -45000]
+        self.stepper_minPos = [-1100, -1600, -45000]
 
         # get the current positions of all steppers
         self.stepper_position = [None, None, None]
 
         # settings for scanning
-        self.scan_stepSize = [50, 80, 500]
+        self.scan_stepSize = [100, 80, 500]
 
         self.scan_pos = [None, None, None]
         # set list of scan poses
