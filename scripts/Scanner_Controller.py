@@ -18,15 +18,15 @@ class ScannerController:
 
         self.stepper_names = ["X", "Y", "Z"]
         self.stepper_IDs = [self.stepperX_ID, self.stepperY_ID, self.stepperZ_ID]
-        self.stepper_home = ['rev', None, 'fwd']
-        self.stepper_home_pos = [-1000, 0, 50000]
+        self.stepper_home = ['rev', None, 'fwd'] # limit switch type
+        self.stepper_home_pos = [-10, 0, 50000]
         self.stepper_maxAccel = [10000, 20000, 100000]
         self.stepper_maxVelocity = [800000, 1000000, 60000000]
         self.stepper_stepModes = [8, 8, 8]
-        self.stepper_currents = [1611, 174, 343]
+        self.stepper_currents = [1762, 174, 343]
 
         self.stepper_maxPos = [450, 1600, 0]
-        self.stepper_minPos = [-1100, -1600, -45000]
+        self.stepper_minPos = [0, -1600, -45000]
 
         # get the current positions of all steppers
         self.stepper_position = [None, None, None]
@@ -58,7 +58,7 @@ class ScannerController:
 
         self.outputFolder = ""
 
-    def correctName(self, val):
+    def correctName(self, val): # which name, what parameter, why displaying values as strings?
         """
         :param val: integer value to be brought into correct format
         :return: str of corrected name
@@ -76,15 +76,19 @@ class ScannerController:
 
         return step_name
 
-    def deEnergise(self):
+    def deEnergise(self): # de-energize stepper of ID-x, deenergizes all steppers, function for choosing stepper ie
+        # class of stepper fix this goddamned shit show of a code block
         for stepper_ID in self.stepper_IDs:
             os.system('ticcmd --deenergize -d ' + stepper_ID)
 
-    def resume(self):
+    def resume(self): # check man page for ticcmd controls, energizing all steppers here
+        # poor formatting/bad coding practice with almost same variable names
         for stepper_ID in self.stepper_IDs:
             os.system('ticcmd --resume --reset-command-timeout -d ' + stepper_ID)
 
-    def setStepMode(self, stepper, step_mode):
+    def setStepMode(self, stepper, step_mode): # more poor coding practice, sets stepmode for 1 stepper
+        # use built in python function format
+
         self.stepper_stepModes[stepper] = step_mode
         os.system('ticcmd --step-mode ' + str(step_mode) + ' -d ' + self.stepper_IDs[stepper])
 
@@ -101,7 +105,7 @@ class ScannerController:
         os.system('ticcmd --max-speed ' + str(max_velocity) + ' -d ' + self.stepper_IDs[stepper])
 
     def home(self, stepper):
-        if self.stepper_home_pos[stepper] != 0:
+        if self.stepper_home_pos[stepper] != 0: # if not homed
             print("Homing stepper", self.stepper_names[stepper])
             os.system('ticcmd --resume --position ' + str(
                 self.stepper_home_pos[stepper]) + ' --reset-command-timeout -d ' + self.stepper_IDs[stepper])
@@ -119,11 +123,13 @@ class ScannerController:
         current_position = int(lines[21].split(" ")[-1])
         self.stepper_position[stepper] = current_position
 
+
     def getLimitState(self, stepper):
         info = os.popen('ticcmd --status -d ' + self.stepper_IDs[stepper]).read()
         # split returned results into its elements
         lines = info.split("\n")
 
+        # what is going on here?
         if self.stepper_home[stepper] == "fwd":
             state = lines[12].split(" ")[-1]
         elif self.stepper_home[stepper] == "rev":
@@ -140,24 +146,24 @@ class ScannerController:
 
     def moveToPosition(self, stepper, pos):
         # for axes that do not require limits
-        if self.stepper_home[stepper] is not None:
+        if self.stepper_home[stepper] is not None: # just if self.stepper_home[stepper], else statement exists for just stepper y
             if pos > self.stepper_maxPos[stepper]:
                 pos = self.stepper_maxPos[stepper]
             elif pos < self.stepper_minPos[stepper]:
                 pos = self.stepper_minPos[stepper]
 
+            # if pos is passed as string the above if statements may be flawed ie comparing str and int
             pos = int(pos)
             print("Moving stepper", self.stepper_names[stepper], "to position", pos)
 
         else:
             pos = int(pos)
-            print("Moving stepper", self.stepper_names[stepper], "to position",
-                  pos)
+            print("Moving stepper", self.stepper_names[stepper], "to position", pos)
 
         os.system('ticcmd --resume --position ' + str(pos) + ' --reset-command-timeout -d ' + self.stepper_IDs[stepper])
         self.getStepperPosition(stepper)
         while self.stepper_position[stepper] != pos:
-            os.system('ticcmd --resume --reset-command-timeout -d ' + self.stepper_IDs[stepper])
+            os.system('ticcmd --resume --position ' + str(pos) + ' --reset-command-timeout -d ' + self.stepper_IDs[stepper])
             self.getStepperPosition(stepper)
 
     def setScanRange(self, stepper, min, max, step):

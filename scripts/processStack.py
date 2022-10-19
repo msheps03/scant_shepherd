@@ -50,6 +50,7 @@ def checkFocus(image_path, threshold, usable_images, rejected_images):
 
     # original window size (due to input image)
     # = 2448 x 2048 -> time to size it down!
+    # presume there is an inbuilt function for image scaling
     scale_percent = 15  # percent of original size
     width = int(image.shape[1] * scale_percent / 100)
     height = int(image.shape[0] * scale_percent / 100)
@@ -78,7 +79,7 @@ def checkFocus(image_path, threshold, usable_images, rejected_images):
 
 def process_stack(data, output_folder, path_to_external, sharpen):
     stack_name = data.split(" ")[1]
-    stack_name = Path(stack_name).name[:-15]
+    stack_name = Path(stack_name).name[:-15] # what in the sweet hell is this
 
     temp_output_folder = output_folder.joinpath(stack_name)
 
