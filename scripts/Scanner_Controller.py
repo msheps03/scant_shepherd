@@ -19,14 +19,14 @@ class ScannerController:
         self.stepper_names = ["X", "Y", "Z"]
         self.stepper_IDs = [self.stepperX_ID, self.stepperY_ID, self.stepperZ_ID]
         self.stepper_home = ['rev', None, 'fwd'] # limit switch type
-        self.stepper_home_pos = [-10, 0, 50000]
+        self.stepper_home_pos = [-1000, 0, 50000]
         self.stepper_maxAccel = [10000, 20000, 100000]
         self.stepper_maxVelocity = [800000, 1000000, 60000000]
         self.stepper_stepModes = [8, 8, 8]
-        self.stepper_currents = [1762, 174, 343]
+        self.stepper_currents = [1611, 174, 343]
 
-        self.stepper_maxPos = [450, 1600, 0]
-        self.stepper_minPos = [0, -1600, -45000]
+        self.stepper_maxPos = [1000, 1600, 0]
+        self.stepper_minPos = [-450, -1600, -15000]
 
         # get the current positions of all steppers
         self.stepper_position = [None, None, None]
@@ -36,9 +36,9 @@ class ScannerController:
 
         self.scan_pos = [None, None, None]
         # set list of scan poses
-        self.setScanRange(stepper=0, min=0, max=450, step=self.scan_stepSize[0])
+        self.setScanRange(stepper=0, min=0, max=720, step=self.scan_stepSize[0])
         self.setScanRange(stepper=1, min=0, max=1600, step=self.scan_stepSize[1])
-        self.setScanRange(stepper=2, min=-25000, max=-8000, step=self.scan_stepSize[2])
+        self.setScanRange(stepper=2, min=-15000, max=-8000, step=self.scan_stepSize[2])
 
         # keep track of position during scanning, skip to next full rotation of Y Axis
         self.completedRotations = 0
