@@ -3,9 +3,9 @@ import numpy as np
 from pathlib import Path
 
 """
-00281470,         Tic T500 Stepper Motor Controller -> Z-Axis (turntable)
-00281480,         Tic T500 Stepper Motor Controller -> Y-Axis (camera arm)
-00282144,         Tic T500 Stepper Motor Controller -> camera Focus
+00346074,         Tic T500 Stepper Motor Controller -> Z-Axis (turntable)
+00346106,         Tic T500 Stepper Motor Controller -> Y-Axis (camera arm)
+00346067,         Tic T500 Stepper Motor Controller -> camera Focus
 """
 
 
@@ -34,7 +34,7 @@ class ScannerController:
         # settings for scanning
         self.scan_stepSize = [100, 80, 500]
 
-        self.scan_pos = [None, None, None]
+        self.scan_pos = [None, None, None] # min max step, set in setScanRange
         # set list of scan poses
         self.setScanRange(stepper=0, min=0, max=720, step=self.scan_stepSize[0])
         self.setScanRange(stepper=1, min=0, max=1600, step=self.scan_stepSize[1])
@@ -58,11 +58,12 @@ class ScannerController:
 
         self.outputFolder = ""
 
-    def correctName(self, val): # which name, what parameter, why displaying values as strings?
+    def correctName(self, val): # formatting output location
         """
-        :param val: integer value to be brought into correct format
+        :param val: current stepper position
         :return: str of corrected name
         """
+        # should be formatted for str length 6, could likely build backwards
         if abs(val) < 10:
             step_name = "0000" + str(abs(val))
         elif abs(val) < 100:

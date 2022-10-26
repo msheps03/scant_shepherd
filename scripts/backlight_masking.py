@@ -34,6 +34,8 @@ def generate_backlight_mask(orig_file_loc, backlit_file_loc, threshold=250):
 
     print("INFO:  Cutout saved to:", cutout_name)
 
+    return
+
 
 if __name__ == '__main__':
     orig_file_loc = "I:\\3D_Scanner\\Manuscript\\Revision\\masking_comparison\\_x_00190_y_00000_orig.jpg"
