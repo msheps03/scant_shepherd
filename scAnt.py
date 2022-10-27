@@ -349,19 +349,19 @@ class scAnt_mainWindow(QtWidgets.QMainWindow):
         # rather than re-init scanRange, change values for stepperMotor class. Likely smoother
         X = self.scanner.stepperX # temporary variable for my sanity
         X.setMin(self.ui.doubleSpinBox_xMin.value())
-        X.setMax(ui.doubleSpinBox_xMax.value() + self.ui.doubleSpinBox_xStep.value())
+        X.setMax(self.ui.doubleSpinBox_xMax.value() + self.ui.doubleSpinBox_xStep.value())
         X.setStep(self.ui.doubleSpinBox_xStep.value())
         X.setScanRange()
 
         Y = self.scanner.stepperY
         Y.setMin(self.ui.doubleSpinBox_yMin.value())
-        Y.setMax(ui.doubleSpinBox_yMax.value() + self.ui.doubleSpinBox_yStep.value())
+        Y.setMax(self.ui.doubleSpinBox_yMax.value() + self.ui.doubleSpinBox_yStep.value())
         Y.setStep(self.ui.doubleSpinBox_yStep.value())
         Y.setScanRange()
 
         Z = self.scanner.stepperZ
         Z.setMin(self.ui.doubleSpinBox_zMin.value())
-        Z.setMax(ui.doubleSpinBox_zMax.value() + self.ui.doubleSpinBox_zStep.value())
+        Z.setMax(self.ui.doubleSpinBox_zMax.value() + self.ui.doubleSpinBox_zStep.value())
         Z.setStep(self.ui.doubleSpinBox_zStep.value())
         Z.setScanRange()
         return
@@ -397,10 +397,10 @@ class scAnt_mainWindow(QtWidgets.QMainWindow):
 
     def homeX_threaded(self, progress_callback):
         self.ui.horizontalSlider_xAxis.setEnabled(False)
-        self.scanner.home(0)
+        self.scanner.stepperX.home()
         self.log_info("Homed X Axis")
         self.ui.horizontalSlider_xAxis.setEnabled(True)
-        self.scanner.getStepperPosition(0)
+        self.scanner.stepperX.getStepperPosition()
         self.ui.lcdNumber_xAxis.display(self.scanner.stepperX.position)
         self.ui.horizontalSlider_xAxis.setValue(self.scanner.stepperX.position)
         self.homed_X = True
@@ -409,10 +409,10 @@ class scAnt_mainWindow(QtWidgets.QMainWindow):
 
     def homeZ_threaded(self, progress_callback):
         self.ui.horizontalSlider_zAxis.setEnabled(False)
-        self.scanner.home(2)
+        self.scanner.stepperZ.home()
         self.log_info("Homed Z Axis")
         self.ui.horizontalSlider_zAxis.setEnabled(True)
-        self.scanner.getStepperPosition(2)
+        self.scanner.stepperZ.getStepperPosition()
         self.ui.lcdNumber_zAxis.display(self.scanner.stepperZ.position)
         self.ui.horizontalSlider_zAxis.setValue(self.scanner.stepperZ.position)
         self.homed_Z = True
@@ -427,7 +427,7 @@ class scAnt_mainWindow(QtWidgets.QMainWindow):
     def resetY(self):
         self.ui.horizontalSlider_yAxis.setValue(0)
         self.updateDisplayY()
-        self.scanner.home(1)
+        self.scanner.stepperY.home()
         self.log_info("Reset Y Axis")
         return
 
@@ -440,7 +440,7 @@ class scAnt_mainWindow(QtWidgets.QMainWindow):
         self.ui.horizontalSlider_xAxis.setEnabled(False)
         self.ui.pushButton_xHome.setEnabled(False)
         pos = self.ui.horizontalSlider_xAxis.value()
-        self.scanner.moveToPosition(stepper=0, pos=pos)
+        self.scanner.stepperX.moveToPosition(pos)
         self.ui.horizontalSlider_xAxis.setEnabled(True)
         self.ui.pushButton_xHome.setEnabled(True)
         self.posX = pos
@@ -1205,7 +1205,7 @@ class scAnt_mainWindow(QtWidgets.QMainWindow):
             self.posX = posX
             progress_callback.emit(self.progress)
             for posY in self.scanner.scanPos[1]:
-                self.scanner.moveToPosition(1, posY + self.scanner.completedRotations * self.scanner.stepperY.maxPos)
+                self.scanner.stepperY.moveToPosition(posY + self.scanner.completedRotations * self.scanner.stepperY.maxPos)
                 self.posY = posY
                 progress_callback.emit(self.progress)
 
@@ -1307,7 +1307,7 @@ class scAnt_mainWindow(QtWidgets.QMainWindow):
                 worker = Worker(self.processStack)
                 self.activeThreads += 1
                 self.threadpool.start(worker)
-        return
+
 
     def processStack(self, progress_callback):
         stack = self.stackList[0]

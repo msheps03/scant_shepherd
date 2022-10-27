@@ -1,18 +1,18 @@
 dictX = {
     'name': 'Stepper X',
     'ID': "00346067",
-    'limitSwitchType':'rev',
-    'homePos':-10,
-    'maxAccel':10000,
-    'maxVelocity':80000,
-    'stepMode':8,
-    'current':1611,
-    'maxPos':1000,
-    'minPos':-450,
-    'stepSize':100,
-    'scanStep':100,
-    'scanMin':0,
-    'scanMax':720
+    'limitSwitchType': 'rev',
+    'homePos': -1000,
+    'maxAccel': 10000,
+    'maxVelocity': 800000,
+    'stepMode': 8,
+    'current': 1743,
+    'maxPos': 1000,
+    'minPos': -500,
+    'stepSize': 50,
+    'scanStep': 50,
+    'scanMin': 0,
+    'scanMax': 720
         }
 
 dictY = {

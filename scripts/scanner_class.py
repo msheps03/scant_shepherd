@@ -1,8 +1,8 @@
-from stepper_class import *
+from .StepperMotor import StepperMotor
 import os
 import numpy as np
 from pathlib import Path
-from dictionaries import *
+from .dictionaries import *
 # name, ID, limitSwitchType, homePos, maxAccel, maxVelocity, stepMode, current, maxPos, minPos, stepSize, scanStep, scanMin, scanMax
 
 
@@ -15,12 +15,14 @@ class ScannerController:
         
         self.scanPos = [self.stepperX.scanPos, self.stepperY.scanPos, self.stepperZ.scanPos]
         
-        self.imagesTaken = 0
-        self.imagesToTake = sum([len(i) for i in self.scanPos])
+        self.images_taken = 0
+        self.images_to_take = len(self.scanPos[0]) * len(self.scanPos[1]) * len(self.scanPos[2])
         
         self.progress = self.getProgress()
         self.cam = None
         self.outputFolder = ''
+        self.completedRotations = 0
+        self.completedStacks = 0
         
     def deEnergise(self):
         self.stepperX.deEnergise()
